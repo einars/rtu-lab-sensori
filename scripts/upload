@@ -1,0 +1,8 @@
+#!/bin/sh
+
+set -o pipefail -o errexit -o nounset
+
+cd "$(dirname "$0")/.."
+
+arduino-cli upload \
+  -p /dev/ttyACM* --fqbn arduino:avr:uno

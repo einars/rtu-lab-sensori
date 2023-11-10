@@ -1,0 +1,9 @@
+#!/bin/sh
+
+set -o pipefail -o errexit -o nounset
+
+cd "$(dirname "$0")/.."
+
+arduino-cli compile \
+  --build-property 'build.extra_flags=-Ofast' \
+  --fqbn arduino:avr:nano
