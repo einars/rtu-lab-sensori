@@ -21,10 +21,13 @@ enum Health {
   Working,
 };
 
+// cik sekundes ilgs ir kūldauns pēc lāzera beigām, lai uzskatītu, ka printeris ir beidzis darbu.
+const unsigned Cooldown_s = 5;
+
 
 struct state_t {
   Plotter plotter = Plotter::Idle;
-  unsigned long t_cooldown_ends = 0;
+  unsigned long t_cooldown_end = 0;
   bool nosuce = false;
   bool lazers = false;
 };
@@ -46,24 +49,31 @@ void get_state (state_t& s) {
 
   s.lazers = ! digitalRead(pin_lazers);
 
-  unsigned t = micros() / 1000;
+  unsigned long t = millis() / 1000; // operējam ar sekundēm
 
   if (s.plotter == Plotter::Printing && ! s.lazers) {
     s.plotter = Plotter::Cooldown;
-    s.t_cooldown_ends = t + 5000;
+    s.t_cooldown_end = t + Cooldown_s;
   }
   if (s.lazers) {
     s.plotter = Plotter::Printing;
   }
 
-  if (s.plotter == Plotter::Cooldown && t > s.t_cooldown_ends) {
+  // millis() overflowo pēc 50 dienām: ja plotera indikators būs ieslēgts 50
+  // dienas pēc kārtas, tad 50. dienā tas var palaist garām vienu
+  // Cooldown => Finished pāreju un palikt nebeidzamā cooldownā līdz nākamajai
+  // drukai.
+  //
+  if (s.plotter == Plotter::Cooldown && t > s.t_cooldown_end) {
     s.plotter = Plotter::Finished;
   }
 
   s.nosuce = ! digitalRead(pin_nosuce);
 
   if ( ! s.nosuce && s.plotter == Plotter::Finished) {
-    // nosūce izslēgta, atgriežamies atkal sākuma pozīcijā: kad tiks ieslēgta, atkal nekas nespīdēs
+    // nosūce izslēgta, atgriežamies atkal sākuma pozīcijā, resetojam printeri uz Idle
+    // (mazliet atšķiras indikācijas, atkarībā no tā, vai printeris ir Idle, vai Finished —
+    // idle nav nekā jāindicē, Finished tiek spīdināts)
     s.plotter = Plotter::Idle;
   }
 }
