@@ -24,7 +24,7 @@ enum Health {
 
 struct state_t {
   Plotter plotter = Plotter::Idle;
-  unsigned long laser_off_at_ms = 0;
+  unsigned long t_cooldown_ends = 0;
   bool nosuce = false;
   bool lazers = false;
 };
@@ -50,13 +50,13 @@ void get_state (state_t& s) {
 
   if (s.plotter == Plotter::Printing && ! s.lazers) {
     s.plotter = Plotter::Cooldown;
-    s.laser_off_at_ms = t + 5000;
+    s.t_cooldown_ends = t + 5000;
   }
   if (s.lazers) {
     s.plotter = Plotter::Printing;
   }
 
-  if (s.plotter == Plotter::Cooldown && t > s.laser_off_at_ms) {
+  if (s.plotter == Plotter::Cooldown && t > s.t_cooldown_ends) {
     s.plotter = Plotter::Finished;
   }
 
