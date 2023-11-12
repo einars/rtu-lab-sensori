@@ -117,7 +117,7 @@ void loop () {
     break;
   case Health::ErrNosucejsEmergency:
     if ((micros() / 500000) % 2 == 1) {
-      leds(0, 1, 0);
+      leds(1, 0, 0);
     } else {
       leds(1, 1, 0);
     }
