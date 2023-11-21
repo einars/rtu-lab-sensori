@@ -4,5 +4,16 @@ set -o pipefail -o errexit -o nounset
 
 cd "$(dirname "$0")/.."
 
+
+device=/dev/ttyACM*
+if [ $device = "/dev/ttyACM*" ]; then
+  device=/dev/ttyUSB*
+fi
+
+fqdn=arduino:avr:nano:cpu=atmega328old
+#fqdn=arduino:avr:uno
+
+echo $device
+
 arduino-cli upload \
-  -p /dev/ttyACM* --fqbn arduino:avr:uno
+  -p $device --fqbn $fqdn

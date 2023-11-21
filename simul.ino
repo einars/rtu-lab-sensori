@@ -1,8 +1,12 @@
 #include "Arduino.h"
 
-const int pin_green = 4;
-const int pin_yellow = 5;
-const int pin_red = 6;
+const int ind_red = 5;
+const int ind_yellow = 6;
+const int ind_green = 7;
+
+const int out_red_inv = 2;
+const int out_yellow_inv = 3;
+const int out_green_inv = 4;
 
 const int pin_nosuce = 12;
 const int pin_lazers = 13;
@@ -34,9 +38,14 @@ struct state_t {
 
 
 void leds(int r, int y, int g) {
-  digitalWrite(pin_red, r ? HIGH : LOW); 
-  digitalWrite(pin_yellow, y ? HIGH : LOW); 
-  digitalWrite(pin_green, g ? HIGH : LOW); 
+  digitalWrite(ind_red, r ? HIGH : LOW); 
+  digitalWrite(out_red_inv, r ? LOW : HIGH); 
+
+  digitalWrite(ind_yellow, y ? HIGH : LOW); 
+  digitalWrite(out_yellow_inv, y ? LOW : HIGH); 
+
+  digitalWrite(ind_green, g ? HIGH : LOW); 
+  digitalWrite(out_green_inv, g ? LOW : HIGH); 
 }
 
 void blink_hello () {
@@ -82,20 +91,38 @@ state_t n;
 
 void setup () {
 
-  pinMode(pin_green, OUTPUT);
-  pinMode(pin_red, OUTPUT);
-  pinMode(pin_yellow, OUTPUT);
+  // testa indikatori
+  pinMode(ind_red, OUTPUT);
+  pinMode(ind_yellow, OUTPUT);
+  pinMode(ind_green, OUTPUT);
 
-  pinMode(pin_nosuce, INPUT_PULLUP);
-  pinMode(pin_lazers, INPUT_PULLUP);
+  // izejas uz optopāriem
+  pinMode(out_red_inv, OUTPUT);
+  pinMode(out_yellow_inv, OUTPUT);
+  pinMode(out_green_inv, OUTPUT);
 
-  blink_hello();
+  leds(0, 0, 0);
+
+  // pinMode(pin_nosuce, INPUT_PULLUP);
+  // pinMode(pin_lazers, INPUT_PULLUP);
+
+  // blink_hello();
 
   Serial.begin(115200);
 
 }
 
-void loop () {
+void loop_test () {
+  const int d = 1000;
+  leds(1, 1, 0);
+  delay(d);
+  leds(0, 1, 1);
+  delay(d);
+  leds(1, 0, 1);
+  delay(d);
+}
+
+void loop_sim () {
 
   get_state(n);
 
@@ -137,4 +164,8 @@ void loop () {
     break;
   }
 
+}
+void loop () {
+  // loop_sim();
+  loop_test();
 }

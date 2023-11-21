@@ -1,3 +1,4 @@
 /ploterim/ploterim-backups/
+/ploterim/_autosave*
 /ploterim/#*
 *.lck
