@@ -15,4 +15,8 @@ iespēju darbināt ploteri ar izslēgtu nosūcēju, un indicēs, ka ploterēšan
 darbi ir beigušies.
 
 
+![Platīte](photos/2311-plate-wip.jpg?raw=true)
 
+![Platīte spīd](photos/2311-plate-spiid.jpg?raw=true)
+
+![Platīte no apakšas izskatās pēc miskastes](photos/2311-plate-dibens.jpg?raw=true)
