@@ -1,4 +1,5 @@
 /ploterim/ploterim-backups/
 /ploterim/_autosave*
 /ploterim/#*
+/ploterim/*-bak
 *.lck
