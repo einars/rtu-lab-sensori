@@ -4,8 +4,8 @@ const int out_red = 5;
 const int out_yellow = 6;
 const int out_green = 7;
 
-const int pin_nosuce = 12;
-const int pin_plotter = 13;
+const int in_nosuce = A0;
+const int in_plotter = A1;
 
 const int test_nosuce_inv = 16;
 const int test_plotter_inv = 17;
@@ -28,7 +28,13 @@ enum Health {
 };
 
 // cik sekundes ilgs ir kūldauns pēc lāzera beigām, lai uzskatītu, ka printeris ir beidzis darbu.
-const unsigned Cooldown_s = 5;
+const unsigned Cooldown_s     digitalWrite(out_red, r ? HIGH : LOW);
+
+    digitalWrite(out_yellow, y ? HIGH : LOW);
+
+    digitalWrite(out_green, g ? HIGH : LOW);
+}
+= 5;
 
 struct state_t {
     Plotter plotter = Plotter::Idle;
@@ -93,6 +99,9 @@ void setup () {
     pinMode(out_yellow, OUTPUT);
     pinMode(out_green, OUTPUT);
 
+    pinMode(in_nosuce, INPUT);
+    pinMode(in_plotter, INPUT);
+
     pinMode(test_nosuce_inv, INPUT_PULLUP);
     pinMode(test_plotter_inv, INPUT_PULLUP);
 
@@ -109,19 +118,17 @@ void setup () {
 }
 
 void loop_test () {
-    leds(digitalRead(test_nosuce_inv), digitalRead(test_plotter_inv), millis() % 1000 > 200);
-    digitalWrite(debug_nosuce,  ! digitalRead(test_nosuce_inv));
-    digitalWrite(debug_plotter, ! digitalRead(test_plotter_inv));
+    // leds(digitalRead(test_nosuce_inv), digitalRead(test_plotter_inv), millis() % 1000 > 200);
+    // digitalWrite(debug_nosuce,  ! digitalRead(test_nosuce_inv));
+    // digitalWrite(debug_plotter, ! digitalRead(test_plotter_inv));
 
-    /*
-    const int d = 100;
+    const int d = 1000;
     leds(1, 1, 0);
     delay(d);
     leds(0, 1, 1);
     delay(d);
     leds(1, 0, 1);
     delay(d);
-    */
 }
 
 void loop_sim () {
@@ -170,9 +177,19 @@ void loop_sim () {
         break;
     }
 
+    Serial.print("NOS: ");
+    Serial.print(analogRead(in_nosuce));
+
+    Serial.print(" LAZ: ");
+    Serial.print(analogRead(in_plotter));
+    Serial.print("\n");
+
+    delay(100);
+
+
 }
 
 void loop () {
-    loop_sim();
-    // loop_test();
+    // loop_sim();
+    loop_test();
 }
